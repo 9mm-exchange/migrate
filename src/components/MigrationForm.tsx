@@ -58,7 +58,7 @@ export function MigrationForm({ position, onSuccess }: MigrationFormProps) {
   const status = getStatusText(step);
 
   return (
-    <Card className="bg-[#0a100a] border-[#2a3820]">
+    <Card className="bg-black border-[#2a3820]">
       <div className="p-4 border-b border-[#2a3820]">
         <h3 className="font-semibold text-white">Migration</h3>
       </div>
@@ -156,7 +156,7 @@ export function MigrationForm({ position, onSuccess }: MigrationFormProps) {
               </div>
             )}
             
-            {step === "success" && migrationResult?.tokenId !== "unknown" && (
+            {step === "success" && migrationResult && migrationResult.tokenId !== "unknown" && (
               <a href={`https://dex.9mm.pro/liquidity/${migrationResult.tokenId}?chain=pulsechain`}
                 target="_blank" rel="noopener noreferrer" className="mt-2 block text-xs text-[#d9ff36] hover:underline">
                 View on 9mm ↗

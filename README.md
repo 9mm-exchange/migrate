@@ -1,143 +1,248 @@
-# PulseX → 9mm V3 Migrator
+# PulseX V2 → 9mm V3 Migrator
 
-A web application for migrating PulseX V2 liquidity positions to 9mm V3 full-range positions on PulseChain.
+Migrate your PulseX V2 liquidity positions to 9mm V3 with full-range liquidity in a single transaction.
 
-## Features
+🌐 **Live App:** https://migrate.9mm.pro
 
-- 🔗 **Wallet Connection** - Connect via RainbowKit (MetaMask, WalletConnect, etc.)
-- 📊 **LP Position Display** - View your PulseX V2 LP tokens
-- ⚙️ **Migration Settings** - Configure fee tier and slippage tolerance
-- 🚀 **One-Click Migration** - Approve and migrate in a single flow
-- 💰 **Automatic Dust Refund** - Any leftover tokens are returned
+---
 
-## Technology Stack
+## ✨ Features
 
-- **Next.js 14** - React framework with App Router
-- **wagmi + viem** - Ethereum interactions
-- **RainbowKit** - Wallet connection UI
-- **shadcn/ui** - Component library
-- **Tailwind CSS v4** - Styling
+- 🔄 **One-Click Migration** - Move from V2 to V3 in a single transaction
+- 📦 **Batch Migration** - Migrate multiple positions at once
+- 🎯 **Full-Range Liquidity** - Automatic tick range calculation
+- 💰 **Zero Platform Fees** - Only pay gas
+- 🔒 **Secure** - Audited smart contracts
+- ⚡ **Fast** - Optimized for PulseChain
 
-## Contract Addresses
+## 🚀 Supported Pairs
 
-### 9mm V3 (Target)
-| Contract | Address |
-|----------|---------|
-| V3 Migrator | `0xdee0BDC4cc82872f7D35941aBFA872F744FdF064` |
-| Position Manager | `0xCC05bf158202b4F461Ede8843d76dcd7Bbad07f2` |
-| V3 Factory | `0xe50DbDC88E87a2C92984d794bcF3D1d76f619C68` |
+✅ **10 Migration Paths** (V2 → V3)
+- pHEX/WPLS (V1 & V2)
+- PLSX/WPLS (V1 & V2)
+- WPLS/eDAI (V1 & V2)
+- pHEX/eDAI (V2)
+- eWETH/WPLS (V1)
+- INC/WPLS (V2)
+- INC/PLSX (V2)
 
-### PulseX V2 (Source)
-| Contract | Address |
-|----------|---------|
-| Factory | `0x1715a3E4A142d8b698131108995174F37aEBA10D` |
-| WPLS | `0xA1077a294dDE1B09bB078844df40758a5D0f9a27` |
+## 🏗️ Architecture
 
-## Getting Started
+### Smart Contracts
+- **Migrator:** `0xcD2f7f58Fff604B460c02E08b542de75549177c4`
+- **9mm V3 Factory:** `0xe50DbDC88E87a2C92984d794bcF3D1d76f619C68`
+- **Position Manager:** `0xCC05bf158202b4F461Ede8843d76dcd7Bbad07f2`
+
+### Frontend
+- **Framework:** Next.js 16 (React 19)
+- **Web3:** wagmi v2 + viem
+- **Wallet:** RainbowKit
+- **Styling:** Tailwind CSS v4
+
+---
+
+## 🛠️ Development
 
 ### Prerequisites
-
-- Node.js 18+
+- Node.js 20+
 - npm or yarn
-- A wallet with PulseX LP tokens
+- MetaMask or compatible wallet
 
-### Installation
+### Local Setup
 
 ```bash
-# Clone the repository
-git clone <repo-url>
-cd migrator
-
 # Install dependencies
 npm install
 
-# Copy environment file
+# Set up environment
 cp .env.local.example .env.local
+# Edit .env.local with your WalletConnect Project ID
 
-# Edit .env.local and add your WalletConnect Project ID
-# Get one at https://cloud.walletconnect.com
-```
-
-### Development
-
-```bash
+# Run dev server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Visit http://localhost:3000
 
-### Production Build
+### Build
 
 ```bash
 npm run build
-npm run start
+npm start
 ```
 
-## Environment Variables
+---
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | WalletConnect Cloud Project ID | Yes |
-| `NEXT_PUBLIC_PULSECHAIN_RPC` | PulseChain RPC URL (default: public RPC) | No |
+## 🐳 Docker
 
-## How It Works
+### Build Image
 
-1. **Connect Wallet** - Connect your wallet to PulseChain
-2. **Select LP Position** - Choose which PulseX V2 LP to migrate
-3. **Configure Settings** - Pick fee tier (0.3% recommended) and slippage
-4. **Approve** - Approve LP tokens for the migrator contract
-5. **Migrate** - Execute the migration transaction
-6. **Done!** - Receive your 9mm V3 NFT position
-
-### Migration Flow
-
-```
-PulseX V2 LP Token
-        │
-        ▼
-┌───────────────────┐
-│  9mm V3 Migrator  │
-│  (0xdee0...064)   │
-└───────────────────┘
-        │
-        ├── Burns V2 LP tokens
-        ├── Receives Token A + Token B
-        ├── Creates V3 full-range position
-        └── Returns NFT + any dust
-        │
-        ▼
-  9mm V3 NFT Position
+```bash
+docker build -t spiritmonkey/pulsex-migrator:latest .
 ```
 
-## Supported Pairs
+### Run Container
 
-Currently configured for:
-- HEX/WPLS
-- WPLS/DAI
+```bash
+docker run -p 3000:3000 spiritmonkey/pulsex-migrator:latest
+```
 
-To add more pairs, edit `src/hooks/useLPPositions.ts`.
+---
 
-## Full-Range Positions
+## ☸️ Kubernetes Deployment
 
-This migrator creates **full-range** V3 positions:
-- Tick range: -887220 to 887220
-- Behaves similarly to V2 (earns fees at all prices)
-- No rebalancing required
-- Minimal dust
+### Quick Deploy
 
-## Security
+```bash
+# Build and push to Docker Hub
+./scripts/build-amd64.sh
 
-- Uses the **official 9mm V3Migrator contract** (Uniswap fork)
-- Contract is battle-tested and audited
-- Stateless - no funds stored in migrator
-- Slippage protection via `amount0Min` / `amount1Min`
+# Deploy to Kubernetes
+kubectl apply -f k8s/
 
-## License
+# Check deployment
+kubectl get pods -n ninemm-frontend
+```
 
-MIT
+### Access Application
 
-## Links
+The app is deployed at: **https://migrate.9mm.pro**
 
-- [PulseScan](https://scan.pulsechain.com)
-- [9mm](https://app.9mm.pro)
-- [PulseX](https://pulsex.com)
+For detailed Kubernetes documentation, see [KUBERNETES.md](KUBERNETES.md)
+
+---
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```bash
+# WalletConnect Project ID (required)
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
+
+# PulseChain RPC (optional - defaults to public RPC)
+NEXT_PUBLIC_PULSECHAIN_RPC=https://rpc.pulsechain.com
+```
+
+### Kubernetes Secrets
+
+The following secrets must be configured in Kubernetes:
+- `DOCKERHUB_TOKEN` - Docker Hub access token
+- `DOCKERHUB_USERNAME` - Docker Hub username (spiritmonkey)
+- `KUBECONFIG` - Kubernetes cluster configuration (base64 encoded)
+
+---
+
+## 🔄 CI/CD
+
+### Automatic Deployment
+
+Every push to `main` triggers:
+1. ✅ Docker image build (AMD64)
+2. ✅ Push to Docker Hub
+3. ✅ Kubernetes deployment restart
+4. ✅ Rolling update (zero downtime)
+
+See [.github/workflows/deploy.yml](.github/workflows/deploy.yml)
+
+### Manual Deployment
+
+```bash
+# Trigger via GitHub Actions UI
+# Or push to main branch
+git push origin main
+```
+
+---
+
+## 📊 Monitoring
+
+### View Logs
+
+```bash
+kubectl logs -f deployment/migrator -n ninemm-frontend
+```
+
+### Check Status
+
+```bash
+kubectl get all -n ninemm-frontend -l app=pulsex-migrator
+```
+
+### Scaling
+
+```bash
+# Manual scaling
+kubectl scale deployment migrator -n ninemm-frontend --replicas=5
+
+# Auto-scaling (HPA configured for 2-10 replicas)
+kubectl get hpa -n ninemm-frontend
+```
+
+---
+
+## 🧪 Testing
+
+### Address Verification
+
+All token and LP addresses are verified using Foundry tests:
+
+```bash
+cd foundry-contracts
+forge test --match-path test/VerifyAddresses.t.sol -vv --fork-url https://pulsechain.publicnode.com
+```
+
+See [ADDRESS_VERIFICATION_REPORT.md](ADDRESS_VERIFICATION_REPORT.md) for details.
+
+---
+
+## 🔒 Security
+
+### Smart Contract Security
+- ✅ Modified UniswapV3 migrator for PulseX compatibility
+- ✅ Handles PulseX's unique `burn(address, address)` signature
+- ✅ All addresses verified on-chain
+
+### Web Security
+- ✅ React 19.2.1 (patched for React2Shell vulnerability)
+- ✅ Next.js 16.0.10 (latest stable)
+- ✅ SSL/TLS via Cloudflare
+- ✅ Rate limiting enabled
+
+---
+
+## 📚 Documentation
+
+- [KUBERNETES.md](KUBERNETES.md) - Kubernetes deployment guide
+- [DOCKER_BUILD.md](DOCKER_BUILD.md) - Docker build options
+- [ADDRESS_VERIFICATION_REPORT.md](ADDRESS_VERIFICATION_REPORT.md) - Address verification
+- [VERIFIED_ADDRESSES.md](VERIFIED_ADDRESSES.md) - Quick address reference
+- [k8s/README.md](k8s/README.md) - Detailed K8s documentation
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+---
+
+## 📝 License
+
+MIT License - see LICENSE file for details
+
+---
+
+## 🔗 Links
+
+- **Live App:** https://migrate.9mm.pro
+- **9mm DEX:** https://dex.9mm.pro
+- **PulseChain:** https://pulsechain.com
+- **Docs:** https://docs.9mm.pro
+
+---
+
+**Built with ❤️ for the PulseChain community**

@@ -1,0 +1,12 @@
+# These owners will be the default owners for everything in the repo
+* @devaprasad
+
+# Kubernetes configuration
+/k8s/ @devaprasad
+
+# Docker configuration
+Dockerfile @devaprasad
+.dockerignore @devaprasad
+
+# GitHub workflows
+/.github/ @devaprasad

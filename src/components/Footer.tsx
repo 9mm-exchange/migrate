@@ -6,7 +6,7 @@ export function Footer() {
   const { rpcStatus, blockNumber, latency } = useRpcStatus();
 
   return (
-    <footer className="border-t border-[#2a3820] bg-[#0a100a]">
+    <footer className="border-t border-[#2a3820] bg-black">
       <div className="container mx-auto px-4 py-3">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           {/* RPC */}

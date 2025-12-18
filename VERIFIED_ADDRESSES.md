@@ -1,0 +1,124 @@
+# ✅ Verified Addresses - Quick Reference
+
+**Last Verified:** December 15, 2025  
+**Status:** ALL VERIFIED ON-CHAIN
+
+---
+
+## 🔧 Core Contracts
+
+```typescript
+// 9mm V3 Contracts
+V3_MIGRATOR: "0xcD2f7f58Fff604B460c02E08b542de75549177c4"
+POSITION_MANAGER: "0xCC05bf158202b4F461Ede8843d76dcd7Bbad07f2"
+V3_FACTORY: "0xe50DbDC88E87a2C92984d794bcF3D1d76f619C68"
+
+// PulseX Factories
+FACTORY_V2: "0x1715a3E4A142d8b698131108995174F37aEBA10D"
+FACTORY_V1: "0x29eA7545DEf87022BAdc76323F373EA1e707C523"
+```
+
+---
+
+## 🪙 Token Addresses
+
+```typescript
+WPLS: "0xA1077a294dDE1B09bB078844df40758a5D0f9a27"
+pHEX: "0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39"
+eHEX: "0x57fde0a71132198BBeC939B98976993d8D89D225"
+eDAI: "0xefD766cCb38EaF1dfd701853BFCe31359239F305"
+pDAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F"
+eWETH: "0x02DcdD04e3F455D838cd1249292C58f3B79e3C3C"
+pWETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+PLSX: "0x95B303987A60C71504D99Aa1b13B4DA07b0790ab"
+INC: "0x2fa878Ab3F87CC1C9737Fc071108F904c0B0C95d"
+```
+
+---
+
+## 🔄 Migration Pairs (V2 → V3)
+
+### PulseX V2 Pairs
+
+| Pair | V2 Address (PulseX V2) | V3 Address (9mm V3) | Fee |
+|------|------------------------|---------------------|-----|
+| **pHEX/WPLS** | `0xf1F4ee610b2bAbB05C635F726eF8B0C568c8dc65` | `0x6639a38f7b6F9BA236227C4dcd723a8Dc4Bd368F` | 1% |
+| **PLSX/WPLS** | `0x1b45b9148791d3a104184Cd5DFE5CE57193a3ee9` | `0x96737676cb25396a9F857272cdDc8E3A346d63da` | 1% |
+| **WPLS/eDAI** | `0xE56043671df55dE5CDf8459710433C10324DE0aE` | `0xE37a2c1755151Ff910FF895A14FAD5570730f6e9` | 0.25% |
+| **pHEX/eDAI** | `0x6F1747370B1CAcb911ad6D4477b718633DB328c8` | `0x6ACe474A9FdE57e663E47A4c7965964440b35f71` | 0.25% |
+| **INC/WPLS** | `0xf808Bb6265e9Ca27002c0A04562Bf50d4FE37EAA` | `0xfC4745206D437ebb55A9590cBAF09724F068B726` | 0.25% |
+| **INC/PLSX** | `0x7Dbeca4c74d01cd8782D4EF5C05C0769723fb0ea` | `0x864Da5B36da7cd93E54b1ED1582b2C622AcD69a3` | 1% |
+
+### PulseX V1 Pairs
+
+| Pair | V2 Address (PulseX V1) | V3 Address (9mm V3) | Fee |
+|------|------------------------|---------------------|-----|
+| **pHEX/WPLS** | `0x19BB45a7270177e303DEe6eAA6F5Ad700812bA98` | `0x6639a38f7b6F9BA236227C4dcd723a8Dc4Bd368F` | 1% |
+| **PLSX/WPLS** | `0x149B2C629e652f2E89E11cd57e5d4D77ee166f9F` | `0x96737676cb25396a9F857272cdDc8E3A346d63da` | 1% |
+| **WPLS/eDAI** | `0x146E1f1e060e5b5016Db0D118D2C5a11A240ae32` | `0xE37a2c1755151Ff910FF895A14FAD5570730f6e9` | 0.25% |
+| **eWETH/WPLS** | `0x29d66D5900Eb0d629E1e6946195520065A6c5aeE` | `0xf91d0CBfbA8e11cCd203e97AEFdA4352AcCFFEEb` | 0.25% |
+
+---
+
+## 🔍 Critical Corrections Made
+
+### ⚠️ WPLS/eDAI - Addresses Were Swapped
+```diff
+- v2Pair: "0xe37a2c1755151ff910ff895a14fad5570730f6e9"  ❌ WRONG (was V3)
+- v3Pool: "0xe56043671df55de5cdf8459710433c10324de0ae"  ❌ WRONG (was V2)
+
++ v2Pair: "0xE56043671df55dE5CDf8459710433C10324DE0aE"  ✅ CORRECT (V2)
++ v3Pool: "0xE37a2c1755151Ff910FF895A14FAD5570730f6e9"  ✅ CORRECT (V3)
+```
+
+### ⚠️ INC/PLSX - Fee Tier Was Incorrect
+```diff
+- feeTier: 2500  ❌ WRONG (0.25%)
++ feeTier: 10000 ✅ CORRECT (1%)
+```
+
+---
+
+## 🧪 Verification
+
+Run the comprehensive test suite to verify all addresses:
+
+```bash
+cd foundry-contracts
+forge test --match-path test/VerifyAddresses.t.sol -vv --fork-url https://pulsechain.publicnode.com
+```
+
+**Expected Output:** All tests should pass ✅
+
+---
+
+## 📋 Checksum-Verified Addresses
+
+All addresses below use correct EIP-55 checksums:
+
+### V2 Pairs (PulseX V2 Factory)
+- `0xf1F4ee610b2bAbB05C635F726eF8B0C568c8dc65` - pHEX/WPLS
+- `0x1b45b9148791d3a104184Cd5DFE5CE57193a3ee9` - PLSX/WPLS
+- `0xE56043671df55dE5CDf8459710433C10324DE0aE` - WPLS/eDAI ⚠️ CORRECTED
+- `0x6F1747370B1CAcb911ad6D4477b718633DB328c8` - pHEX/eDAI
+- `0xf808Bb6265e9Ca27002c0A04562Bf50d4FE37EAA` - INC/WPLS
+- `0x7Dbeca4c74d01cd8782D4EF5C05C0769723fb0ea` - INC/PLSX
+
+### V2 Pairs (PulseX V1 Factory)
+- `0x19BB45a7270177e303DEe6eAA6F5Ad700812bA98` - pHEX/WPLS
+- `0x149B2C629e652f2E89E11cd57e5d4D77ee166f9F` - PLSX/WPLS
+- `0x146E1f1e060e5b5016Db0D118D2C5a11A240ae32` - WPLS/eDAI
+- `0x29d66D5900Eb0d629E1e6946195520065A6c5aeE` - eWETH/WPLS
+
+### V3 Pools (9mm V3 Factory)
+- `0x6639a38f7b6F9BA236227C4dcd723a8Dc4Bd368F` - pHEX/WPLS 1%
+- `0x96737676cb25396a9F857272cdDc8E3A346d63da` - PLSX/WPLS 1%
+- `0xE37a2c1755151Ff910FF895A14FAD5570730f6e9` - WPLS/eDAI 0.25% ⚠️ CORRECTED
+- `0x6ACe474A9FdE57e663E47A4c7965964440b35f71` - pHEX/eDAI 0.25%
+- `0xfC4745206D437ebb55A9590cBAF09724F068B726` - INC/WPLS 0.25%
+- `0x864Da5B36da7cd93E54b1ED1582b2C622AcD69a3` - INC/PLSX 1% ⚠️ FEE CORRECTED
+- `0xf91d0CBfbA8e11cCd203e97AEFdA4352AcCFFEEb` - eWETH/WPLS 0.25%
+
+---
+
+**✅ All addresses verified on PulseChain mainnet using Foundry**

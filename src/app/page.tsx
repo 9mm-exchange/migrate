@@ -30,6 +30,8 @@ export default function Home() {
   const { addMigratedPosition, refetch: refetchMigrated } = useMigratedPositions();
   const [selectedPosition, setSelectedPosition] = useState<LPPosition | null>(null);
   const [showPairs, setShowPairs] = useState(false);
+  const [isBatchMigrating, setIsBatchMigrating] = useState(false);
+  const [batchPositions, setBatchPositions] = useState<LPPosition[]>([]);
 
   const handleMigrationSuccess = (result: MigrationResult) => {
     addMigratedPosition({
@@ -48,17 +50,29 @@ export default function Home() {
     setSelectedPosition(null);
   };
 
+  const handleBatchMigrationStart = () => {
+    setIsBatchMigrating(true);
+    setBatchPositions(positions);
+  };
+
+  const handleBatchMigrationComplete = () => {
+    setIsBatchMigrating(false);
+    setBatchPositions([]);
+    refetch();
+    refetchMigrated();
+  };
+
   return (
     <div className="min-h-screen bg-[#050807] flex flex-col">
       {/* Header */}
       <header className="border-b border-[#2a3820] bg-[#0a100a]">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold">
-              <span className="text-[#cfff04]">PulseX</span>
-              <span className="text-[#8aa860] mx-2">→</span>
-              <span className="text-[#d9ff36]">9mm</span>
-            </h1>
+            <div className="flex items-center gap-2">
+              <img src="/pulsex-logo.png" alt="PulseX" className="h-8 w-auto" />
+              <span className="text-[#8aa860] text-2xl">→</span>
+              <img src="/9mm-logo.png" alt="9mm" className="h-8 w-auto" />
+            </div>
             <span className="text-xs text-[#8aa860] border-l border-[#2a3820] pl-3">V2 to V3 Migrator</span>
           </div>
           <ConnectButton showBalance={false} chainStatus="icon" accountStatus={{ smallScreen: "avatar", largeScreen: "full" }} />
@@ -69,13 +83,53 @@ export default function Home() {
         {/* Hero */}
         <div className="text-center mb-12 pt-4">
           <p className="text-[#8aa860] text-sm uppercase tracking-widest mb-4">PulseChain Liquidity Migration</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Migrate Your <span className="text-[#cfff04]">Liquidity</span>
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight" style={{ textShadow: '0 0 40px rgba(207, 255, 4, 0.6), 0 0 80px rgba(207, 255, 4, 0.3)' }}>
+            Migrate Your <span className="text-[#cfff04]" style={{ textShadow: '0 0 30px rgba(207, 255, 4, 0.8), 0 0 60px rgba(207, 255, 4, 0.5), 0 0 90px rgba(207, 255, 4, 0.3)' }}>Liquidity</span>
           </h2>
-          <p className="text-[#8aa860] max-w-md mx-auto text-base leading-relaxed">
+          <p className="text-[#8aa860] max-w-md mx-auto text-base leading-relaxed mb-6">
             Move your <span className="text-white">PulseX V2</span> LP positions to <span className="text-white">9mm V3</span> with full-range liquidity — all in a single transaction.
           </p>
-          <div className="flex items-center justify-center gap-6 mt-6 text-sm">
+          
+          {/* Why Migrate to V3 */}
+          <div className="flex items-center justify-center gap-8 mt-8 mb-6 flex-wrap max-w-3xl mx-auto">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-[#cfff04]/10 flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#cfff04]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-medium text-sm">Higher Fees</p>
+                <p className="text-[#8aa860] text-xs">Earn more per trade</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-[#cfff04]/10 flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#cfff04]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-medium text-sm">Capital Efficient</p>
+                <p className="text-[#8aa860] text-xs">Concentrated liquidity</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-[#cfff04]/10 flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#cfff04]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-medium text-sm">Better Rewards</p>
+                <p className="text-[#8aa860] text-xs">NFT position tokens</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-center gap-6 text-sm">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#cfff04]"></span>
               <span className="text-[#8aa860]">{supportedPairsCount} Pairs Supported</span>
@@ -100,7 +154,6 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white mb-2">Connect Wallet</h3>
                   <p className="text-[#8aa860] text-sm">Connect to view your LP positions</p>
                 </div>
-                <ConnectButton />
               </CardContent>
             </Card>
           </div>
@@ -155,7 +208,7 @@ export default function Home() {
                           key={position.pairAddress}
                           position={position}
                           isSelected={selectedPosition?.pairAddress === position.pairAddress}
-                          onSelect={() => setSelectedPosition(position)}
+                          onSelect={() => !isBatchMigrating && setSelectedPosition(position)}
                         />
                       ))}
                     </div>
@@ -164,11 +217,12 @@ export default function Home() {
               </Card>
 
               {/* Migrate All */}
-              {positions.length >= 2 && (
+              {(positions.length >= 2 || isBatchMigrating) && (
                 <MigrateAllButton
-                  positions={positions}
+                  positions={isBatchMigrating ? batchPositions : positions}
                   slippage={1}
-                  onSuccess={() => { refetch(); refetchMigrated(); }}
+                  onStart={handleBatchMigrationStart}
+                  onSuccess={handleBatchMigrationComplete}
                 />
               )}
 
@@ -202,7 +256,9 @@ export default function Home() {
 
             {/* Right - Form & Status */}
             <div className="space-y-6">
-              <MigrationForm position={selectedPosition} onSuccess={handleMigrationSuccess} />
+              {!isBatchMigrating && (
+                <MigrationForm position={selectedPosition} onSuccess={handleMigrationSuccess} />
+              )}
               <MigratorStatus />
             </div>
           </div>

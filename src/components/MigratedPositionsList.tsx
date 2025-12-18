@@ -25,7 +25,7 @@ function MigratedPositionCard({
   const migratedDate = new Date(position.migratedAt).toLocaleDateString();
 
   return (
-    <div className="p-4 rounded-xl bg-[#0a100a] border border-[#2a3820] space-y-3 group hover:border-[#cfff04]/30 transition-colors">
+    <div className="p-4 rounded-xl bg-black border border-[#2a3820] space-y-3 group hover:border-[#cfff04]/30 transition-colors">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex -space-x-2">
@@ -81,8 +81,8 @@ export function MigratedPositionsList() {
   const { positions, isLoading, removePosition, clearAllPositions, refetch } = useMigratedPositions();
 
   return (
-    <Card className="bg-[#0a100a]/80 backdrop-blur-sm border-[#2a3820] rounded-2xl overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-[#2a3820] bg-[#0a100a]">
+    <Card className="bg-black/80 backdrop-blur-sm border-[#2a3820] rounded-2xl overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between border-b border-[#2a3820] bg-black">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#d9ff36]/10 flex items-center justify-center">
             <svg className="w-5 h-5 text-[#d9ff36]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: migrator
+  namespace: ninemm-frontend
+  labels:
+    app: pulsex-migrator
+    version: v1
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: pulsex-migrator
+  template:
+    metadata:
+      labels:
+        app: pulsex-migrator
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+        prometheus.io/path: "/api/metrics"
+    spec:
+      containers:
+      - name: migrator
+        image: spiritmonkey/pulsex-migrator:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: migrator-config
+              key: NODE_ENV
+        - name: NEXT_TELEMETRY_DISABLED
+          valueFrom:
+            configMapKeyRef:
+              name: migrator-config
+              key: NEXT_TELEMETRY_DISABLED
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: migrator-config
+              key: PORT
+        - name: HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              name: migrator-config
+              key: HOSTNAME
+        - name: NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: migrator-secrets
+              key: WALLETCONNECT_PROJECT_ID
+        - name: NEXT_PUBLIC_PULSECHAIN_RPC_URL
+          valueFrom:
+            configMapKeyRef:
+              name: migrator-config
+              key: NEXT_PUBLIC_PULSECHAIN_RPC_URL
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        fsGroup: 1001
+      restartPolicy: Always

@@ -36,9 +36,9 @@
 .dark {
   --background: #050807;
   --foreground: #f4f4f5;
-  --card: #0a100a;
+  --card: #000000;
   --card-foreground: #f4f4f5;
-  --popover: #0a100a;
+  --popover: #000000;
   --popover-foreground: #f4f4f5;
   --primary: #cfff04;
   --primary-foreground: #050807;
@@ -61,6 +61,13 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* RainbowKit Connect Button Customization */
+button[data-testid="connect-button"],
+button.iekbcc0 {
+  background-color: var(--accent-foreground) !important;
+  color: rgba(0, 0, 0, 1) !important;
 }
 
 /* Scrollbar */

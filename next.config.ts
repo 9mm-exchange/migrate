@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   // Empty turbopack config to silence the warning
   turbopack: {},
   
+  // Enable standalone output for Docker
+  output: "standalone",
+  
   webpack: (config) => {
     // Fix for WalletConnect/RainbowKit dependencies
     config.resolve.fallback = {

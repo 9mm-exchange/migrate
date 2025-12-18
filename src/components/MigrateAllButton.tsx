@@ -14,6 +14,7 @@ import type { LPPosition } from "@/hooks/useLPPositions";
 interface MigrateAllButtonProps {
   positions: LPPosition[];
   slippage?: number;
+  onStart?: () => void;
   onSuccess?: () => void;
 }
 
@@ -46,7 +47,7 @@ const STATUS_COLOR: Record<Status, string> = {
   error: "text-red-400",
 };
 
-export function MigrateAllButton({ positions, slippage = 1, onSuccess }: MigrateAllButtonProps) {
+export function MigrateAllButton({ positions, slippage = 1, onStart, onSuccess }: MigrateAllButtonProps) {
   const { address } = useAccount();
   const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
@@ -58,6 +59,9 @@ export function MigrateAllButton({ positions, slippage = 1, onSuccess }: Migrate
 
   const migrateAll = useCallback(async () => {
     if (!address || !publicClient || positions.length === 0) return;
+
+    // Notify parent that batch migration is starting
+    if (onStart) onStart();
 
     setIsRunning(true);
     setOverallError(null);
@@ -80,7 +84,12 @@ export function MigrateAllButton({ positions, slippage = 1, onSuccess }: Migrate
 
         setProgress((prev) => prev.map((p, idx) => idx === i ? { ...p, status: "waiting_approval" } : p));
         setCurrentAction(`${i + 1}/${positions.length}: Waiting for approval...`);
-        await publicClient.waitForTransactionReceipt({ hash: approveHash, confirmations: 1 });
+        await publicClient.waitForTransactionReceipt({ 
+          hash: approveHash, 
+          confirmations: 2,
+          timeout: 120_000, // 2 minutes
+          pollingInterval: 2_000, // Check every 2 seconds
+        });
 
         // Migrate
         setProgress((prev) => prev.map((p, idx) => idx === i ? { ...p, status: "migrating" } : p));
@@ -114,7 +123,12 @@ export function MigrateAllButton({ positions, slippage = 1, onSuccess }: Migrate
 
         setProgress((prev) => prev.map((p, idx) => idx === i ? { ...p, status: "waiting_migration" } : p));
         setCurrentAction(`${i + 1}/${positions.length}: Confirming migration...`);
-        await publicClient.waitForTransactionReceipt({ hash: migrateHash, confirmations: 1 });
+        await publicClient.waitForTransactionReceipt({ 
+          hash: migrateHash, 
+          confirmations: 2,
+          timeout: 120_000, // 2 minutes
+          pollingInterval: 2_000, // Check every 2 seconds
+        });
 
         setProgress((prev) => prev.map((p, idx) => idx === i ? { ...p, status: "success", txHash: migrateHash } : p));
       } catch (err: any) {
@@ -124,7 +138,7 @@ export function MigrateAllButton({ positions, slippage = 1, onSuccess }: Migrate
 
     setIsRunning(false);
     setCurrentAction("");
-  }, [address, publicClient, positions, slippage, writeContractAsync]);
+  }, [address, publicClient, positions, slippage, writeContractAsync, onStart]);
 
   const completed = progress.filter((p) => p.status === "success").length;
   const failed = progress.filter((p) => p.status === "error").length;
@@ -132,7 +146,7 @@ export function MigrateAllButton({ positions, slippage = 1, onSuccess }: Migrate
   if (positions.length < 2) return null;
 
   return (
-    <Card className="bg-[#0a100a] border-[#2a3820]">
+    <Card className="bg-black border-[#2a3820]">
       <div className="flex items-center justify-between p-4 border-b border-[#2a3820]">
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-white">Batch Migration</h3>

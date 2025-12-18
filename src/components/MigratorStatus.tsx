@@ -8,7 +8,7 @@ export function MigratorStatus() {
   const { weth9, positionManager, isLoading, isValid } = useMigratorInfo();
 
   return (
-    <Card className="bg-[#0a100a] border-[#2a3820]">
+    <Card className="bg-black border-[#2a3820]">
       <div className="flex items-center justify-between p-4 border-b border-[#2a3820]">
         <h3 className="text-sm text-[#8aa860]">Contract Status</h3>
         {!isLoading && (

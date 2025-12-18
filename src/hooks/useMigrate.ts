@@ -179,8 +179,13 @@ export function useMigrate() {
           args: [params],
         });
 
-        // Wait for transaction receipt
-        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        // Wait for transaction receipt with retries (PulseChain can be slow)
+        const receipt = await publicClient.waitForTransactionReceipt({ 
+          hash,
+          confirmations: 2, // Wait for 2 confirmations for safety
+          timeout: 120_000, // 2 minutes timeout (PulseChain can be slow)
+          pollingInterval: 2_000, // Check every 2 seconds
+        });
 
         // Try to extract tokenId from logs
         let tokenId: string | null = null;
@@ -266,11 +271,13 @@ export function useMigrate() {
         setStep("approved");
         await publicClient.waitForTransactionReceipt({ 
           hash: txHash,
-          confirmations: 1, // Wait for 1 confirmation
+          confirmations: 2, // Wait for 2 confirmations
+          timeout: 120_000, // 2 minutes timeout
+          pollingInterval: 2_000, // Check every 2 seconds
         });
       } catch (err) {
         console.error("Error waiting for approval confirmation:", err);
-        setError("Approval transaction failed");
+        setError("Approval transaction failed or timed out. Please check your wallet.");
         setStep("error");
         return null;
       }

@@ -36,9 +36,9 @@ export const SUPPORTED_MIGRATIONS: MigrationPair[] = [
   },
   {
     name: "WPLS/eDAI (V2)",
-    v2Pair: "0xe37a2c1755151ff910ff895a14fad5570730f6e9",
+    v2Pair: "0xE56043671df55dE5CDf8459710433C10324DE0aE",
     // V2 contains: WPLS + eDAI (bridged from Ethereum)
-    v3Pool: "0xe56043671df55de5cdf8459710433c10324de0ae",
+    v3Pool: "0xE37a2c1755151Ff910FF895A14FAD5570730f6e9",
     feeTier: 2500, // 0.25%
   },
   {
@@ -56,9 +56,9 @@ export const SUPPORTED_MIGRATIONS: MigrationPair[] = [
   },
   {
     name: "INC/PLSX",
-    v2Pair: "0x7dbeca4c74d01cd8782d4ef5c05c0769723fb0ea",
+    v2Pair: "0x7Dbeca4c74d01cd8782D4EF5C05C0769723fb0ea",
     v3Pool: "0x864Da5B36da7cd93E54b1ED1582b2C622AcD69a3",
-    feeTier: 2500, // 0.25%
+    feeTier: 10000, // 1%
   },
   
   // ============ PulseX V1 Factory Pairs ============
@@ -78,9 +78,9 @@ export const SUPPORTED_MIGRATIONS: MigrationPair[] = [
   },
   {
     name: "WPLS/eDAI (V1)",
-    v2Pair: "0x146e1f1e060e5b5016db0d118d2c5a11a240ae32",
+    v2Pair: "0x146E1f1e060e5b5016Db0D118D2C5a11A240ae32",
     // V2 contains: WPLS + eDAI (bridged from Ethereum)
-    v3Pool: "0xe56043671df55de5cdf8459710433c10324de0ae",
+    v3Pool: "0xE37a2c1755151Ff910FF895A14FAD5570730f6e9",
     feeTier: 2500, // 0.25%
   },
   {
